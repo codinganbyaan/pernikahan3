@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undangan Pernikahan | Diah & Adji</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #d4af85;
+            --secondary: #8b6b4a;
+            --dark: #333333;
+            --light: #f8f5f2;
+            --accent: #a2836e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--dark);
+            background-color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--light);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease-out;
+        }
+        
+        .loading-content {
+            text-align: center;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(212, 175, 133, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+        
+        .loading-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-top: 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        .text-primary {
+            color: var(--primary);
+        }
+        
+        /* Header & Cover */
+        .cover {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('diah.png') no-repeat center center;
+            background-size: cover;
+            color: white;
+            padding: 0 20px;
+        }
+        
+        .cover-content {
+            max-width: 800px;
+            position: relative;
+            z-index: 2;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        
+        .names {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .date {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+        }
+        
+        .divider {
+            width: 100px;
+            height: 2px;
+            background-color: var(--primary);
+            margin: 2rem auto;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            margin: 20px 0;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        .btn:hover {
+            background-color: transparent;
+            color: var(--primary);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-outline:hover {
+            background-color: white;
+            color: var(--dark);
+        }
+        
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .nav.scrolled {
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+        
+        .nav.scrolled .nav-link {
+            color: var(--dark);
+        }
+        
+        .nav.scrolled .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav.scrolled .nav-logo {
+            color: var(--dark);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover:after {
+            width: 100%;
+        }
+        
+        /* Sections */
+        section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            font-size: 2.5rem;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 3px;
+            background: var(--primary);
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Our Story */
+        .story-container {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            margin-top: 50px;
+        }
+        
+        .story-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .story-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .story-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        .story-content {
+            flex: 1;
+        }
+        
+        .story-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .story-content p {
+            margin-bottom: 15px;
+        }
+        
+        /* Event Details */
+        .events {
+            background-color: #f0e6d9;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .events:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+            background-size: cover;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .event-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            margin-top: 50px;
+        }
+        
+        .event-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .event-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .event-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .event-details {
+            margin-bottom: 20px;
+        }
+        
+        .event-details p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        /* Gallery */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 50px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            aspect-ratio: 1/1;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        /* RSVP */
+        .rsvp {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('diah.png') no-repeat center center;
+            background-size: cover;
+            color: white;
+            text-align: center;
+        }
+        
+        .rsvp .section-title {
+            color: white;
+        }
+        
+        .rsvp .section-title:after {
+            background: white;
+        }
+        
+        .rsvp-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+        }
+        
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .footer-text {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            opacity: 0.8;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .social-link {
+            color: white;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        
+        .social-link:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+        
+        /* Music Player */
+        .music-player {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        
+        .music-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .music-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+        }
+        
+        .music-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        /* Untuk menyembunyikan audio element */
+        #wedding-music {
+            display: none;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .names {
+                font-size: 3.5rem;
+            }
+            
+            .story-container {
+                flex-direction: column;
+            }
+            
+            .event-container {
+                flex-direction: column;
+            }
+            
+            .event-card {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .names {
+                font-size: 2.8rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            section {
+                padding: 80px 20px;
+            }
+            
+            .music-btn {
+                padding: 10px 15px;
+            }
+            
+            .music-text {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Memuat Undangan...</div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">Diah & Adji</a>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#our-story" class="nav-link">Our Story</a></li>
+                <li><a href="#events" class="nav-link">Events</a></li>
+                <li><a href="#gallery" class="nav-link">Gallery</a></li>
+                <li><a href="#rsvp" class="nav-link">RSVP</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Cover Section -->
+    <section class="cover" id="home">
+        <div class="cover-content">
+            <h1 class="names">Diah <span class="text-primary">&</span> Adji</h1>
+            <div class="divider"></div>
+            <p class="date">15 November 2025</p>
+            <a href="#rsvp" class="btn btn-outline">Konfirmasi Kehadiran</a>
+        </div>
+    </section>
+
+    <!-- Our Story -->
+    <section id="our-story">
+        <h2 class="section-title">Our <span class="text-primary">Story</span></h2>
+        <div class="story-container">
+            <div class="story-image">
+                <img src="mr.png" alt="Our Story">
+            </div>
+            <div class="story-content">
+                <h3>Perjalanan Cinta Kami</h3>
+                <p>Kami pertama kali bertemu di online pada tahun 2025. Saat itu, kami sama-sama tidak menyangka bahwa pertemuan biasa itu akan membawa kami pada perjalanan yang begitu indah.</p>
+                <p>Setelah melalui berbagai suka dan duka, akhirnya kami memutuskan untuk mengikat janji suci dalam pernikahan. Ini adalah babak baru dalam kehidupan kami yang ingin kami bagi dengan orang-orang terkasih.</p>
+                <p>"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu sendiri, supaya kamu merasa tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang." (QS. Ar-Rum: 21)</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events -->
+    <section class="events" id="events">
+        <h2 class="section-title">Detail <span class="text-primary">Acara</span></h2>
+        <div class="event-container">
+            <div class="event-card">
+                <div class="event-icon">
+                    <i class="fas fa-mosque"></i>
+                </div>
+                <h3 class="event-title">Akad Nikah</h3>
+                <div class="event-details">
+                    <p><i class="fas fa-calendar-alt"></i> Sabtu, 15 November 2025</p>
+                    <p><i class="fas fa-clock"></i> 09.00 - 10.00 WIB</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Masjid Agung Al-Azhar, Jakarta</p>
+                </div>
+                <a href="#" class="btn">Lihat Lokasi</a>
+            </div>
+            <div class="event-card">
+                <div class="event-icon">
+                    <i class="fas fa-glass-cheers"></i>
+                </div>
+                <h3 class="event-title">Resepsi</h3>
+                <div class="event-details">
+                    <p><i class="fas fa-calendar-alt"></i> Sabtu, 15 November 2025</p>
+                    <p><i class="fas fa-clock"></i> 11.00 - 14.00 WIB</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Ballroom Hotel Grand Mercure, Jakarta</p>
+                </div>
+                <a href="#" class="btn">Lihat Lokasi</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section id="gallery">
+        <h2 class="section-title">Dukung <span class="text-primary">Oleh</span></h2>
+        <div class="gallery-container">
+            <div class="gallery-item">
+                <img src="prodia.png" alt="Gallery 1">
+            </div>
+            <div class="gallery-item">
+                <img src="kbc.png" alt="Gallery 2">
+            </div>
+            <div class="gallery-item">
+                <img src="sozo.png" alt="Gallery 3">
+            </div>
+            <div class="gallery-item">
+                <img src="agung.png" alt="Gallery 4">
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP -->
+    <section class="rsvp" id="rsvp">
+        <h2 class="section-title">Konfirmasi <span class="text-primary">Kehadiran</span></h2>
+        <div class="rsvp-form">
+            <form>
+                <div class="form-group">
+                    <label for="name">Nama Lengkap</label>
+                    <input type="text" id="name" class="form-control" placeholder="Masukkan nama Anda" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="Masukkan email Anda" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Nomor Telepon</label>
+                    <input type="tel" id="phone" class="form-control" placeholder="Masukkan nomor telepon Anda">
+                </div>
+                <div class="form-group">
+                    <label for="attendance">Konfirmasi Kehadiran</label>
+                    <select id="attendance" class="form-control" required>
+                        <option value="" disabled selected>Pilih opsi</option>
+                        <option value="yes">Akan Hadir</option>
+                        <option value="no">Tidak Bisa Hadir</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">Pesan/Ucapan</label>
+                    <textarea id="message" class="form-control" rows="4" placeholder="Tulis pesan atau ucapan untuk kami"></textarea>
+                </div>
+                <button type="submit" class="btn">Kirim Konfirmasi</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">Diah & Adji</div>
+        <p class="footer-text">Terima kasih telah menjadi bagian dari perjalanan cinta kami. Kehadiran dan doa Anda sangat berarti bagi kami.</p>
+        <div class="social-links">
+            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <p class="copyright">© 2025 Undangan Pernikahan Diah & Adji. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Music Player -->
+    <div class="music-player">
+        <audio id="wedding-music" loop>
+            <source src="melamar.mp3" type="audio/mpeg">
+            Browser Anda tidak mendukung elemen audio.
+        </audio>
+        <button id="music-toggle" class="music-btn">
+            <i class="fas fa-music"></i>
+            <span class="music-text">Putar Musik</span>
+        </button>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loadingScreen = document.querySelector('.loading-screen');
+                loadingScreen.style.opacity = '0';
+                setTimeout(function() {
+                    loadingScreen.style.display = 'none';
+                }, 1000);
+            }, 1500); // Waktu loading minimal 1.5 detik
+        });
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Form submission
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Terima kasih telah mengkonfirmasi kehadiran Anda!');
+            form.reset();
+        });
+        
+        // Music Toggle Functionality
+        const musicToggle = document.getElementById('music-toggle');
+        const weddingMusic = document.getElementById('wedding-music');
+        let isPlaying = false;
+        
+        // Cek preferensi autoplay (dengan interaksi user terlebih dahulu)
+        document.body.addEventListener('click', function() {
+            if (!isPlaying) {
+                weddingMusic.play()
+                    .then(() => {
+                        isPlaying = true;
+                        musicToggle.innerHTML = '<i class="fas fa-pause"></i><span class="music-text">Jeda Musik</span>';
+                    })
+                    .catch(error => {
+                        console.log('Autoplay prevented:', error);
+                        // Fallback: biarkan user mengklik tombol play
+                    });
+            }
+        }, { once: true }); // Hanya sekali saat pertama interaksi
+        
+        // Toggle musik saat tombol diklik
+        musicToggle.addEventListener('click', function() {
+            if (isPlaying) {
+                weddingMusic.pause();
+                musicToggle.innerHTML = '<i class="fas fa-music"></i><span class="music-text">Putar Musik</span>';
+            } else {
+                weddingMusic.play();
+                musicToggle.innerHTML = '<i class="fas fa-pause"></i><span class="music-text">Jeda Musik</span>';
+            }
+            isPlaying = !isPlaying;
+        });
+    </script>
+</body>
+</html>
